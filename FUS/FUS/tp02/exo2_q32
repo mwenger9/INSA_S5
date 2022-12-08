@@ -1,0 +1,29 @@
+#!/bin/bash
+
+nbfichier=0
+nbdir=0
+nblienfichier=0
+nbliendir=0
+
+for i in `ls`
+do
+	if [ -d $i ] && ! [ -L $i ]
+		then
+			echo $i
+			nbdir=$((nbdir+1))
+	elif [ -f $i ] && ! [ -L $i ]
+		then
+			nbfichier=$((nbfichier+1))
+	elif [ -d $i ]
+		then
+			nbliendir=$((nbliendir+1))
+	elif [ -f $i ]
+		then
+			nblienfichier=$((nblienfichier+1))	
+	fi
+done
+
+echo "Nombre de répertoires : $nbdir"
+echo "Nombre de fichiers : $nbfichier"
+echo "Nombre de lien répertoires : $nbliendir"
+echo "Nombre de lien fichiers : $nblienfichier"
