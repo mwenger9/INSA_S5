@@ -69,6 +69,23 @@ public class HeapPQ<T> implements PriorityQueue<T> {
 		this.heap[index] = e;
 	}
 
+	private void tamiserVersLeBas(){
+		int index = 0;
+		T e = this.heap[index];
+		int index_fils_plus_grand = comparator.compare(this.heap[1],this.heap[2]) > 0 ? 1 : 2;
+		while(index < (size/2) && this.heap[index] != null && this.comparator.compare(e,this.heap[index_fils_plus_grand]) < 0){
+			this.heap[index] = this.heap[index_fils_plus_grand];
+			this.heap[index_fils_plus_grand] = e;
+			index = index_fils_plus_grand;
+			if(this.heap[(index * 2) + 1] != null && this.heap[(index * 2)] != null){
+				index_fils_plus_grand = comparator.compare(this.heap[(index * 2) + 1],this.heap[(index * 2)]) > 0 ? (index * 2) + 1 : (index*2);
+			}
+		}
+		this.heap[index] = e;
+	}
+
+
+
 	private void grow() {
 		int oldLength = heap.length;
 		heap = Arrays.copyOf(heap, ArraySupport.newLength(oldLength, oldLength + 1, oldLength << 1));
@@ -76,12 +93,21 @@ public class HeapPQ<T> implements PriorityQueue<T> {
 
 	@Override
 	public T peek() {
-		throw new UnsupportedOperationException();
+		return this.heap[0];
 	}
 
 	@Override
 	public T poll() {
-		throw new UnsupportedOperationException();
+		if(this.heap == null){
+			throw new NullPointerException();
+		}
+		size--;
+		T e = this.heap[0];
+		T tmp = this.heap[size];
+		this.heap[0] = tmp;
+		this.heap[size] = null;
+		tamiserVersLeBas();
+		return e;
 	}
 
 	@Override

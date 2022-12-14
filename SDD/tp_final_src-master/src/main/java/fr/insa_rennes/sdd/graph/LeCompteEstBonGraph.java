@@ -121,6 +121,8 @@ public class LeCompteEstBonGraph implements Graph<LeCompteEstBonGraph.State> {
 			}
 			return 0;
 		}
+
+
 		private int get(long stack, int index) {
 			return (int) ((stack & (0xFL << index * 4)) >>> index * 4);
 		}

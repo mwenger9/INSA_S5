@@ -16,7 +16,7 @@ public class MyClass<T> {
 
     public static void main(String args[]) {
 
-        Comparator<Integer> myComparator = (x,y) -> x > y  ? 1 : -1 ;
+        Comparator<Integer> myComparator = (x,y) -> x > y  ? -1 : 1 ;
         /*
         MyClass<Integer> test = new MyClass<Integer>();
         List<Integer> l = new ArrayList<Integer>();
@@ -33,7 +33,7 @@ public class MyClass<T> {
         System.out.println(l.toString());
         Collections.sort(l,test.comp3);
         System.out.println(l.toString());
-
+        */
 
         HeapPQ<Integer> tas = new HeapPQ<>(myComparator);
         tas.add(7);
@@ -42,10 +42,12 @@ public class MyClass<T> {
         tas.add(25);
         tas.add(100);
         tas.add(36);
+        tas.add(1);
+
 
         System.out.println((tas.toString()));
-
-         */
+        int t = tas.poll();
+        System.out.println(tas.toString());
         Graph<Integer> g = new IndexedGraph(5);
         g.addEdge(0, 1, 3);
         g.addEdge(0, 3, 10);
@@ -55,8 +57,9 @@ public class MyClass<T> {
         g.addEdge(4, 3, 2);
 
         Dijkstra<Integer> dijkstra = new Dijkstra<>(g,0);
-        double dist = (dijkstra.getCost(3));
-        System.out.println((dijkstra.getCost(3)));
+        System.out.println(dijkstra.prev.toString());
+        System.out.println(dijkstra.getPathTo(4).toString());
+        //System.out.println((dijkstra.getCost(3)));
 
     }
 }
