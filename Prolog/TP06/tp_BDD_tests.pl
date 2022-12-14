@@ -145,12 +145,75 @@ livraison(f4, p1, 300).
 
 
 
+
+
 % ============================================================================= 
 % SECTION 2 : Opération relationnelles
 % ============================================================================= 
 
+selection_lyon(P,N):-
+        piece(P,N,lyon).
+
+projection(Nom,Lieu):-
+        piece(_,Nom,Lieu).
+
+union(Nom,Ville):-
+        demandeFournisseur(Nom,Ville).
+
+union(Nom,Ville):-
+        fournisseurReference(_,Nom,Ville),
+        nonDemandeFournisseur(Nom,Ville).
+
+nonDemandeFournisseur(Nom,Ville):-
+        demandeFournisseur(Nom,Ville),
+        !,
+        fail.
+nonDemandeFournisseur(Nom,Ville).
 
 
+
+intersection(Nom,Ville):-
+        demandeFournisseur(Nom,Ville),
+        fournisseurReference(_,Nom,Ville).
+
+difference(Nom,Ville):-
+        demandeFournisseur(Nom,Ville),
+        nonDemandeEtFourniRef(Nom,Ville).
+
+difference(Nom,Ville):-
+        fournisseurReference(_,Nom,Ville),
+        nonDemandeEtFourniRef(Nom,Ville).
+
+nonDemandeEtFourniRef(Nom,Ville):-
+        demandeFournisseur(Nom,Ville),
+        fournisseurReference(_,Nom,Ville),
+        !,
+        fail.
+
+nonDemandeEtFourniRef(Nom,Ville).
+
+produit_cartesien(NumF1, Nom, Ville, NumF2, Piece, Quantite):-
+        fournisseurReference(NumF1,Nom,Ville),
+        livraison(NumF2,Piece,Quantite).
+
+jointure(NumF, Nom, Ville, Piece, Quantite):-
+        fournisseurReference(NumF,Nom,Ville),
+        livraison(NumF,Piece,Quantite).
+
+jointure_sup(NumF, Nom, Ville, Piece, Quantite):-
+        jointure(NumF, Nom, Ville, Piece, Quantite),
+        Quantite > 350.
+
+division(F):-
+        fournisseurReference(F,_,_),
+        not(nonPieceLyon(F)).
+
+nonPieceLyon(F):-
+        piece(NumPiece,_,lyon),
+        not(livraison(F,NumPiece,_)).
+
+% total_pieces_livrees_fournisseur(NumF,QteLivree,Res):-
+%         findall(NumF,livraison(NumF,_,_),Res).
 
 
 % ============================================================================= 

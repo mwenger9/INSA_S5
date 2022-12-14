@@ -1,4 +1,5 @@
 import re
+from pprint import pprint
 
 # Automate générique
 class Automate:
@@ -16,7 +17,7 @@ class Automate:
 
     # Boucle d'analyse du fichier d'entrée à l'aide d'un automate
     def analyser(self, nom):
-        f = open(nom,'r',encoding='utf8')
+        f = open(nom,'r')
         for ligne in f: # Boucle balayage fichier
             for i in range(len(self.automateDon[self.etat])): # Boucle balayage regex
                 # Recherche des expressions régulières disponibles 
@@ -40,3 +41,8 @@ class Automate:
     def afficher(self):
        for cle1 in self.struct.keys():
            print(cle1+" : "+str(self.struct[cle1]))
+
+if __name__ == "__main__":
+    aut = Automate()
+    aut.analyser("sabotiers.ged.txt")
+    aut.afficher()
