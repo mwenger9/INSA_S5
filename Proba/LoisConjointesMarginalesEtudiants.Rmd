@@ -1,0 +1,133 @@
+---
+title: "Lois marginales, conjointes, conditionnelles"
+output: pdf_document
+fontsize: 11pt
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Exercice 2.1 - Exemple loi discrete
+
+```{r}
+#chargement librairie
+
+
+#Generation matrice
+#p
+mat = matrix(c(
+  0.02,0.06,0.02,0.10,0.04,0.15,0.20,0.10,0.01,0.15,0.14,0.01),nrow = 3,ncol=4,byrow = T)
+print(mat)
+
+```
+
+
+## Probabilites marginales
+```{r}
+#px = sum(P(Yi) * P(X|Yi))
+
+px = apply(mat, 1, FUN = sum)
+print(px)
+#py 
+
+py  = apply(mat, 2, FUN = sum)
+print(py)
+```
+
+## Probabilites conditionnelles - P(X=xi | Y=5) = P(X=xi , Y=5)/P(Y=5)
+```{r}
+#p_X_y5
+p_X_Y5 = mat[,2]/py[2]
+
+print(p_X_Y5)
+
+```
+
+## Fonctions spécifiques
+Utilisation de marginTable et conditionTable
+```{r}
+px2 = margin.table(mat,margin = 1)
+print(px2)
+
+py2 = margin.table(mat,margin = 2)
+print(py2)
+
+cond_tab = conditionTable(mat,1,2,2)
+print(cond_tab)
+
+```
+
+# Exercice 2.2 - Loi multinomiale
+
+```{r}
+#Modélisation du problème : quelle loi et quels paramètres ?
+# Loi de Multinomiale
+# N = 12?
+# teta = {18/38,18/38,2/38}
+```
+
+## Probabilites conjointes
+```{r}
+# construction de toutes les combinaisons possibles
+R = expand.grid(0:12, 0:12)
+#print(R)
+R[, 3] = 12 - R[, 1] - R[, 2]
+names(R) = c("x1", "x2", "x3")
+
+# attention, toutes les combinaisons proposées ne sont pas possibles (observez R!), il faudra en tenir compte dans la suite
+# valeurs impossibles = valeurs négatives car on a 12 tirages donc la somme de x1 et x1 doit être inférieur à 12, d'où x3
+print(R)
+```
+
+```{r}
+# calcul des probabilites associees a toutes les combinaisons possibles (vérifiez !)
+
+for (i in 1:length(R)) {
+  if(R[i,3] < 0){
+    R[i,4] = 0
+  }
+  else{
+    R[i,4] = dmultinom(c(R[i,1],R[i,2],R[i,3]),12,c(18/38,18/38,2/38))
+
+  }
+}
+print(R)
+
+
+
+
+```
+
+```{r}
+
+# calcul des probabilites marginales 
+
+
+```
+## Visualisation
+```{r}
+# attention, si erreur du type "Error in plot.new() : figure margins too large"
+# il suffit d'elargir la fenêtre de visu... si, si...
+library(latex2exp)
+library(scatterplot3d)
+
+par(  # Modification des couleurs 
+  col.main="red", col.axis = "blue",
+   # Modification des tailles de police
+  cex.main = 1.2, cex.axis = 1.0, cex.lab = 1.2)
+
+scatterplot3d(x = R$x1, y = R$x2, z = R$x3, 
+              color = grey(0.9-R$p*5), 
+              type = "p",  # tracer des points
+              pch = 16,    # remplir les points
+              xlab = TeX(r'($x_1$)'),                
+              ylab = TeX(r'($x_2$)'), 
+              zlab = TeX(r'($x_3$)'),
+              main = "Fonction de masse de la loi multinomiale",
+              sub ="couleur sombre = probabilite forte")
+
+```
+
+
